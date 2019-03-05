@@ -1,4 +1,4 @@
-require "optic/middleware/version"
+require "optic/version"
 require 'net/http'
 
 module Optic
