@@ -1,8 +1,6 @@
 # Optic::Middleware
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/optic/middleware`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Rails projects or those built on top of Rack are easy to connect to Optic using our custom middleware. In this tutorial we'll show you how to connect the Optic Documenting Middleware to your Rack API so that your integration tests document your code as they execute.
 
 ## Installation
 
@@ -20,19 +18,31 @@ Or install it yourself as:
 
     $ gem install optic-middleware
 
-## Usage
 
-TODO: Write usage instructions here
+### Making the Middleware Run During Testing
+Now add the middleware to your Rack configuration, in a Rails app it's best to do this in `config/enviroments/test.rb` so the middleware is only used during testing. 
 
-## Development
+> Note: If you use multiple middlewares, make sure the Documenting Middleware is added at the bottom of the stack so the documentation is accurate. In most cases putting it last in your configuration file is sufficient. 
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```ruby
+Rails.application.configure do {
+  # All your current configuration settings...
+  
+  # The Documenting middleware. Only used if 'OPTIC_SERVER_LISTENING' flag is found in ENV. 
+  if ENV['OPTIC_SERVER_LISTENING']
+    config.middleware.use OpticTestFixture::DocumentingMiddleware
+  end
+}
+``` 
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+> Note for RSpec users: Optic will only document specs of type :request since only integration tests contain enough data to generate REST docs. Specs of type :controller skip the Rack stack so documentation generated from them would be incomplete.  
+
+## Using the Proxy Fixture
+The Documenting middleware will document all the requests/responses that your tests run. Since it is integrated at the middleware level there's no need to update any of your tests files or fixtures. 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/optic-middleware.
+Bug reports and pull requests are welcome on GitHub at https://github.com/opticdev/optic-middleware.
 
 ## License
 
