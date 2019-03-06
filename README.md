@@ -25,6 +25,8 @@ Now add the middleware to your Rack configuration, in a Rails app it's best to d
 > Note: If you use multiple middlewares, make sure the Documenting Middleware is added at the bottom of the stack so the documentation is accurate. In most cases putting it last in your configuration file is sufficient. 
 
 ```ruby
+require 'optic/middleware'
+
 Rails.application.configure do {
   # All your current configuration settings...
   
