@@ -5,6 +5,7 @@ module Optic
   class DocumentingMiddleware
     def initialize(app, options = {})
       @app = app
+      @port = ENV['OPTIC_SERVER_LISTENING_PORT'] | 30334
     end
 
     def call(env)
@@ -48,7 +49,7 @@ module Optic
       end
 
       # Send request to request logging endpoint
-      http = Net::HTTP.new("localhost", 30334)
+      http = Net::HTTP.new("localhost", @port)
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
       logging_request_response = http.start do
@@ -73,7 +74,7 @@ module Optic
         logging_response.content_length = bodyData.bytesize.to_s
       end
 
-      http = Net::HTTP.new("localhost", 30335)
+      http = Net::HTTP.new("localhost", @port)
       logging_response_response = http.start do
         http.request(logging_response)
       end

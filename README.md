@@ -31,13 +31,30 @@ Rails.application.configure do {
   # All your current configuration settings...
   
   # The Documenting middleware. Only used if 'OPTIC_SERVER_LISTENING' flag is found in ENV. 
-  if ENV['OPTIC_SERVER_LISTENING']
-    config.middleware.use OpticTestFixture::DocumentingMiddleware
+  if ENV['OPTIC_SERVER_LISTENING_PORT']
+    config.middleware.use Optic::DocumentingMiddleware
   end
 }
 ``` 
 
 > Note for RSpec users: Optic will only document specs of type :request since only integration tests contain enough data to generate REST docs. Specs of type :controller skip the Rack stack so documentation generated from them would be incomplete.  
+
+Example `optic.yml`:
+
+```yml
+name: "Test App"
+# Start your api with Optic by running 'api run <taskname>'
+tasks:
+  start:
+    command: "rails s --port $PORT"
+    inboundUrl: http://localhost:30334
+```
+
+Example `rspec` command:
+
+```sh
+ OPTIC_SERVER_LISTENING=30334 RAILS_ENV=test bundle exec rspec spec
+```
 
 ## Using the Proxy Fixture
 The Documenting middleware will document all the requests/responses that your tests run. Since it is integrated at the middleware level there's no need to update any of your tests files or fixtures. 
