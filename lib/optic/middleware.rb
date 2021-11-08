@@ -5,7 +5,7 @@ module Optic
   class DocumentingMiddleware
     def initialize(app, options = {})
       @app = app
-      @port = ENV['OPTIC_SERVER_LISTENING_PORT'] | 30334
+      @port = ENV['OPTIC_SERVER_LISTENING_PORT'] || 30334
     end
 
     def call(env)
