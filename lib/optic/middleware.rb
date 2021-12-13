@@ -6,6 +6,7 @@ module Optic
     def initialize(app, options = {})
       @app = app
       @port = ENV['OPTIC_SERVER_LISTENING_PORT'] || 30334
+      @rails_port =  ENV['RAILS_PORT'] || 5000
     end
 
     def call(env)
@@ -74,7 +75,7 @@ module Optic
         logging_response.content_length = bodyData.bytesize.to_s
       end
 
-      http = Net::HTTP.new("localhost", @port)
+      http = Net::HTTP.new("localhost", @rails_port)
       logging_response_response = http.start do
         http.request(logging_response)
       end
