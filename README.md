@@ -50,10 +50,11 @@ tasks:
     inboundUrl: http://localhost:30334
 ```
 
-Example `rspec` command:
+Example:
 
 ```sh
- OPTIC_SERVER_LISTENING=30334 RAILS_ENV=test bundle exec rspec spec
+ api start #in another window, get the Rails port from here
+ RAILS_PORT=5000 OPTIC_SERVER_LISTENING=30334 RAILS_ENV=test bundle exec rspec spec
 ```
 
 ## Using the Proxy Fixture
